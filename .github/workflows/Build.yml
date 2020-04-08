@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
       uses: warrenbuckley/Setup-Nuget@v1
       
     - name: Restore packages
-      run: nuget restore HCADevOps.sln
+      run: nuget restore SampleWebApplication.sln
       
     - name: Setup MSBuild.exe
       uses: warrenbuckley/Setup-MSBuild@v1
