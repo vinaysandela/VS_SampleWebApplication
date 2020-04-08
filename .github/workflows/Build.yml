@@ -17,4 +17,5 @@ jobs:
          login-server: samplegroupacr.azurecr.io
     - name: docker build
       run:  
-        docker build .\VS_SampleWebApplication\SampleWebApplication -t samplegroupacr.azurecr.io/samplewebapplication
+        docker build ./VS_SampleWebApplication -t samplegroupacr.azurecr.io/samplewebapplication::1.0.0
+        docker push samplegroupacr.azurecr.io/samplewebapplication::1.0.0
