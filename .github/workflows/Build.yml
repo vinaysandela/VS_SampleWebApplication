@@ -9,7 +9,12 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: docker build
-      run:
-        docker build ./VS_SampleWebApplication/SampleWebApplication -t ${DOCKER_REGISTRY-}samplewebapplication
-      
+#    - name: Docker Login
+ #     uses: Azure/docker-login@v1
+  #    with:
+   #     username: SampleGroupACR
+    #    password: Kj6HgeCMML=vJKP4j5ER4o4nqWQlpuEQ
+     #   login-server: samplegroupacr.azurecr.io
+    - name: docker build csharp
+      run: |
+        docker build ./VS_SampleWebApplication/SampleWebApplication -t samplegroupacr.azurecr.io/samplewebapplication:  
