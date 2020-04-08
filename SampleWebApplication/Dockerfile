@@ -5,34 +5,31 @@
 #ARG source
 #WORKDIR /inetpub/wwwroot
 #COPY ${source:-obj/Docker/publish} .
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 AS build
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch as debug
 
-# copy csproj and restore as distinct layers
-COPY *.sln .
-COPY SampleWebApplication/*.csproj ./SampleWebApplication/
+#install debugger for NET Core
+RUN apt-get update
+RUN apt-get install -y unzip
+RUN curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l ~/vsdbg
 
+RUN mkdir /work/
+WORKDIR /work/
+
+COPY ./SampleWebApplication/SampleWebApplication.csproj /work/SampleWebApplication.csproj
 RUN dotnet restore
 
-# copy everything else and build app
-COPY . .
-WORKDIR /app/SampleWebApplication
-RUN dotnet build
+COPY ./SampleWebApplication/ /work/
+RUN mkdir /out/
+RUN dotnet publish --no-restore --output /out/ --configuration Release
 
-#FROM build AS testrunner
-#WORKDIR /app/tests
-#ENTRYPOINT ["dotnet", "test", "--logger:trx"]
+ENTRYPOINT ["dotnet", "run"]
 
-#FROM build AS test
-#WORKDIR /app/tests
-#RUN dotnet test
+###########START NEW IMAGE###########################################
 
-FROM build AS publish
-WORKDIR /app/SampleWebApplication
-RUN dotnet publish -c Release -o out
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim as prod
 
-
-FROM mcr.microsoft.com/dotnet/framework/runtime:4.8 AS runtime
-WORKDIR /app
-COPY --from=publish /app/SampleWebApplication/out ./
-ENTRYPOINT ["dotnetapp.exe"]
+RUN mkdir /app/
+WORKDIR /app/
+COPY --from=debug /out/ /app/
+RUN chmod +x /app/ 
+CMD dotnet work.dll
