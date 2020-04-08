@@ -15,8 +15,8 @@ jobs:
          username: ${{ secrets.DOCKER_USER }} 
          password: ${{ secrets.DOCKER_PASSWORD }} 
          login-server: samplegroupacr.azurecr.io
-    - name: docker build csharp
+    - name: docker build
       run: |
-        docker build ./VS_SampleWebApplication/SampleWebApplication -t samplegroupacr.azurecr.io/samplewebapplication:  
+        docker build .\SampleWebApplication -t samplegroupacr.azurecr.io/samplewebapplication
         
         
