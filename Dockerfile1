@@ -5,23 +5,6 @@
 #ARG source
 #WORKDIR /inetpub/wwwroot
 #COPY ${source:-obj/Docker/publish} .
-<<<<<<< HEAD
-
-#FROM microsoft/dotnet-framework-build:4.7.1 as build-env
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8 as build-env
-
-WORKDIR /app
-COPY . /app
-RUN nuget.exe restore SampleWebApplication.sln -SolutionDirectory ../ -Verbosity normal
-RUN MSBuild.exe SampleWebApplication.sln /t:build /p:Configuration=Release /p:OutputPath=./out
-
-FROM mcr.microsoft.com/dotnet/framework/sdk:4.8
-WORKDIR /app
-COPY --from=build-env app/out .
-
-#ENTRYPOINT ["SampleWebApplication.exe"]
-ENTRYPOINT ["dotnet", "run"]
-=======
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch as debug
 
 #install debugger for NET Core
@@ -50,4 +33,3 @@ WORKDIR /app/
 COPY --from=debug /out/ /app/
 RUN chmod +x /app/ 
 CMD dotnet work.dll
->>>>>>> 425ef81439a6d7f66e8a908d34420b2c004c4707

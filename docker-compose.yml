@@ -2,7 +2,13 @@ version: '3.4'
 
 services:
   samplewebapplication:
-    image: ${DOCKER_REGISTRY-}samplewebapplication
+    #image: ${DOCKER_REGISTRY-}samplewebapplication
+    container_name: sample
+    image: samplegroupacr.azurecr.io/samplewebapplication:1.0.0
     build:
-      context: .\SampleWebApplication
-      dockerfile: Dockerfile
+      context: ./SampleWebApplication
+      target: debug
+    volumes:
+    - ./VS_SampleWebApplication/:/work/
+    ports:
+      - 5000:5000
